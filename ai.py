@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, File, UploadFile
+
 # from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import ollama
@@ -52,9 +53,19 @@ def generate(content: Content):
     #     filename="speech.wav",
     # )
 
-@router.post('/voice')
-def generate_from_voice():
 
-    model = whisper.load_model("tiny")
-    result = model.transcribe("./outputs/output_generated.wav")
-    print(result["text"])
+model = whisper.load_model("tiny")  # load once globally!
+
+
+@router.post("/voice")
+async def generate_from_voice(file: UploadFile = File(...)):
+    file_path = "outputs/input.webm"
+
+    with open(file_path, "wb") as f:
+        f.write(await file.read())
+
+    result = model.transcribe(file_path)
+
+    c = Content(text=result["text"])
+    print(c)
+    return generate(c)
