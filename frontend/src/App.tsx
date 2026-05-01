@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {Markdown}  from "react-markdown";
 
 function App() {
   const [text, setText] = useState("");
@@ -55,7 +56,7 @@ function App() {
       </button>
 
       <h3>Response:</h3>
-      <p>{response}</p>
+      <Markdown>{response}</Markdown>
     </div>
   );
 }
