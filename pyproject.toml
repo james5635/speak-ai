@@ -7,4 +7,5 @@ requires-python = ">=3.11"
 dependencies = [
     "fastapi[standard]>=0.136.1",
     "ollama>=0.6.2",
+    "openai-whisper>=20250625",
 ]

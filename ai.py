@@ -1,8 +1,10 @@
 from fastapi import APIRouter
+# from fastapi.responses import FileResponse
 from pydantic import BaseModel
 import ollama
 import subprocess
-from fastapi.responses import FileResponse
+import whisper
+
 
 router = APIRouter(prefix="/ai")
 
@@ -49,3 +51,10 @@ def generate(content: Content):
     #     media_type="audio/wav",
     #     filename="speech.wav",
     # )
+
+@router.post('/voice')
+def generate_from_voice():
+
+    model = whisper.load_model("tiny")
+    result = model.transcribe("./outputs/output_generated.wav")
+    print(result["text"])
