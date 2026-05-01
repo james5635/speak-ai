@@ -1,5 +1,5 @@
-import { useState } from "react";
-import {Markdown}  from "react-markdown";
+import { useState, useRef } from "react";
+import Markdown from "react-markdown";
 
 function App() {
   const [text, setText] = useState("");
@@ -27,13 +27,56 @@ function App() {
 
       const audio = new Audio(`http://localhost:8000${data.audio_url}`);
       audio.play();
-      
     } catch (err) {
       console.error(err);
       setResponse("Error calling API");
     } finally {
       setLoading(false);
     }
+  };
+
+  const [recording, setRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const chunks = useRef<Blob[]>([]);
+
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+    const mediaRecorder = new MediaRecorder(stream);
+    mediaRecorderRef.current = mediaRecorder;
+
+    chunks.current = [];
+
+    mediaRecorder.ondataavailable = (e) => {
+      chunks.current.push(e.data);
+    };
+
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(chunks.current, { type: "audio/webm" });
+
+      const formData = new FormData();
+      formData.append("file", blob, "input.webm"); // ✅ correct extension
+
+      const res = await fetch("http://localhost:8000/api/ai/voice", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data: { role: string; content: string; audio_url: string } =
+        await res.json();
+      setResponse(data.content);
+
+      const audio = new Audio(`http://localhost:8000${data.audio_url}`);
+      audio.play();
+    };
+
+    mediaRecorder.start();
+    setRecording(true);
+  };
+
+  const stopRecording = () => {
+    mediaRecorderRef.current?.stop();
+    setRecording(false);
   };
 
   return (
@@ -54,6 +97,12 @@ function App() {
       <button onClick={sendToApi} disabled={loading}>
         {loading ? "Sending..." : "Send"}
       </button>
+
+      <div>
+        <button onClick={recording ? stopRecording : startRecording}>
+          {recording ? "Stop" : "Record"}
+        </button>
+      </div>
 
       <h3>Response:</h3>
       <Markdown>{response}</Markdown>
