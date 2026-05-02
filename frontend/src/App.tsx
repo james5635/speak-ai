@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import Markdown from "react-markdown";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 function App() {
   const [text, setText] = useState("");
   const [response, setResponse] = useState<string>("");
@@ -13,7 +15,7 @@ function App() {
     setResponse("");
 
     try {
-      const res = await fetch("http://localhost:8000/api/ai/", {
+      const res = await fetch(`${apiUrl}/api/ai/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +27,7 @@ function App() {
         await res.json();
       setResponse(data.content);
 
-      const audio = new Audio(`http://localhost:8000${data.audio_url}`);
+      const audio = new Audio(`${apiUrl}${data.audio_url}`);
       audio.play();
     } catch (err) {
       console.error(err);
@@ -57,7 +59,7 @@ function App() {
       const formData = new FormData();
       formData.append("file", blob, "input.webm"); // ✅ correct extension
 
-      const res = await fetch("http://localhost:8000/api/ai/voice", {
+      const res = await fetch(`${apiUrl}/api/ai/voice`, {
         method: "POST",
         body: formData,
       });
@@ -66,7 +68,7 @@ function App() {
         await res.json();
       setResponse(data.content);
 
-      const audio = new Audio(`http://localhost:8000${data.audio_url}`);
+      const audio = new Audio(`${apiUrl}${data.audio_url}`);
       audio.play();
     };
 
