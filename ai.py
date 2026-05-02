@@ -17,7 +17,7 @@ class Content(BaseModel):
 @router.post("/")
 def generate(content: Content):
     response = ollama.chat(
-        model="gemma3:270m",
+        model="gemma4:e4b",
         messages=[
             {
                 "role": "user",
@@ -54,7 +54,7 @@ def generate(content: Content):
     # )
 
 
-model = whisper.load_model("small")  # load once globally!
+model = whisper.load_model("turbo")  # load once globally!
 
 
 @router.post("/voice")

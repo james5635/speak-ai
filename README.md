@@ -9,7 +9,7 @@ uv pip install -e .[streamingtts]
 
 sudo apt-get install zstd
 curl -fsSL https://ollama.com/install.sh | sh
-ollama pull gemma3:270m
+ollama pull gemma4:e4b
 
 sudo apt update
 sudo apt install -y ffmpeg
