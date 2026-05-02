@@ -16,7 +16,7 @@ sudo apt install -y ffmpeg
 
 wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O cloudflared && chmod +x cloudflared
 
-./cloudflared tunnel --url http://localhost:8000 --no-autoupdate
+./cloudflared tunnel --url http://localhost:8000 
 ```
 
 ## Run

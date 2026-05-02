@@ -68,7 +68,7 @@ function App() {
         await res.json();
       setResponse(data.content);
 
-      const audio = new Audio(`${apiUrl}${data.audio_url}`);
+      const audio = new Audio(`${apiUrl}${data.audio_url}?t=${Date.now()}`);
       audio.play();
     };
 
