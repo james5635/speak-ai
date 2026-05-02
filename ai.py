@@ -43,7 +43,7 @@ def generate(content: Content):
             "Carter",
         ]
     )  # will generate wav file
-    r["audio_url"] = ("/outputs/generate_generated.wav",)
+    r["audio_url"] = "/outputs/generate_generated.wav"
     print(r)
     return r
 
