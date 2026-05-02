@@ -54,6 +54,8 @@ def generate(content: Content):
     # )
 
 
+# model = whisper.load_model("tiny")  # load once globally!
+# model = whisper.load_model("small")  # load once globally!
 model = whisper.load_model("turbo")  # load once globally!
 
 
